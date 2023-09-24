@@ -167,13 +167,25 @@ def evaluate_fid(config, workdir, eval_folder,
         logging.info(f'freq_mask_path is None, using default mask with lr={sde_solver_lr}')
     if space_mask_path is None:
         logging.info('space_mask_path is None, using default mask')
+        
+    # detect if there are existing samples to continue
+    this_sample_dir = os.path.join(sample_dir, 'samples')
+    dir_to_check = tf.io.gfile.glob(os.path.join(this_sample_dir, "statistics_*.npz"))
+    if len(dir_to_check) > 0:
+        # find the last round
+        last_round = int(sorted(dir_to_check)[-1].split('/')[-1].split('.')[0].split('_')[-1])
+        new_round = last_round + 1    
+        logging.info(f'Found existing samples in {dir_to_check}, continue sampling from round {new_round}'
+                     )
+    else:
+        new_round = 0
+        logging.info(f'No existing samples found, start sampling from round 0')
+    
 
-    for r in range(num_sampling_rounds):
+    for r in range(new_round, num_sampling_rounds):
         start = time.time()
         logging.info("sampling -- round: %d" % (r))
         samples, n = sampling_fn(score_model)
-        
-        this_sample_dir = os.path.join(sample_dir, 'samples')
         
         tf.io.gfile.makedirs(this_sample_dir)
         
@@ -190,11 +202,12 @@ def evaluate_fid(config, workdir, eval_folder,
                     )
                 )
         # Write samples to disk or Google Cloud Storage
+        curr_dir = os.path.join(this_sample_dir, f"samples_{r}.npz")
         
-        logging.info("Writing samples to %s" % this_sample_dir)
+        logging.info(f"Writing samples to {curr_dir}")
         
         with tf.io.gfile.GFile(
-            os.path.join(this_sample_dir, f"samples_{r}.npz"), "wb"
+            curr_dir, "wb"
         ) as fout:
             io_buffer = io.BytesIO()
             np.savez_compressed(io_buffer, samples=samples)
