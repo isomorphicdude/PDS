@@ -55,7 +55,7 @@ def evaluate(config, workdir, eval_folder, speed_up, freq_mask_path, space_mask_
                       config.data.image_size, config.data.image_size)
     sampling_fn = sampling.get_sampling_fn(config, sde, sampling_shape, inverse_scaler, sampling_eps,
                                            freq_mask_path, space_mask_path,alpha)
-    ckpt_path = os.path.join(checkpoint_dir, f'checkpoint.pth')
+    ckpt_path = os.path.join(checkpoint_dir, f'{config.sampling.ckpt_name}')
     state = restore_checkpoint(ckpt_path, state, device=config.device)
     ema.copy_to(score_model.parameters())
 

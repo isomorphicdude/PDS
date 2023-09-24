@@ -16,6 +16,7 @@ def get_config():
   sampling.method = 'pc'
   sampling.predictor = 'reverse_diffusion'
   sampling.corrector = 'langevin'
+  sampling.ckpt_name = 'checkpoint_12.pth'
 
   # model
   model = config.model
