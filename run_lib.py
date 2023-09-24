@@ -18,7 +18,10 @@ from utils import restore_checkpoint
 FLAGS = flags.FLAGS
 
 
-def evaluate(config, workdir, eval_folder, speed_up, freq_mask_path, space_mask_path,alpha):
+def evaluate(config, workdir, eval_folder, 
+             speed_up, freq_mask_path, space_mask_path, 
+             alpha, sde_solver_lr=1.2720):
+    
     sample_dir = os.path.join(workdir, eval_folder)
     os.makedirs(sample_dir, exist_ok=True)
     # Create data normalizer and its inverse
@@ -54,7 +57,8 @@ def evaluate(config, workdir, eval_folder, speed_up, freq_mask_path, space_mask_
                       config.data.num_channels,
                       config.data.image_size, config.data.image_size)
     sampling_fn = sampling.get_sampling_fn(config, sde, sampling_shape, inverse_scaler, sampling_eps,
-                                           freq_mask_path, space_mask_path,alpha)
+                                           freq_mask_path, space_mask_path,alpha, 
+                                           sde_solver_lr=sde_solver_lr)
     
     ckpt_path = os.path.join(checkpoint_dir, f'{config.sampling.ckpt_name}')
     state = restore_checkpoint(ckpt_path, state, device=config.device)
@@ -62,7 +66,13 @@ def evaluate(config, workdir, eval_folder, speed_up, freq_mask_path, space_mask_
 
     logging.info('start sampling!')
     num_sampling_rounds = config.eval.num_samples // config.eval.batch_size + 1
+    
     logging.info('num_sampling_rounds: {}'.format(num_sampling_rounds))
+    
+    if freq_mask_path is None:
+        logging.info(f'freq_mask_path is None, using default mask with lr={sde_solver_lr}')
+    if space_mask_path is None:
+        logging.info('space_mask_path is None, using default mask')
 
     for r in range(num_sampling_rounds):
         start = time.time()
