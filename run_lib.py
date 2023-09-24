@@ -32,7 +32,7 @@ def evaluate(config, workdir, eval_folder, speed_up, freq_mask_path, space_mask_
     state = dict(optimizer=optimizer, model=score_model, ema=ema, step=0)
 
     checkpoint_dir = os.path.join(workdir, "checkpoints")
-    print(checkpoint_dir)
+    # print(checkpoint_dir)
 
     # Setup SDEs
     if config.training.sde.lower() == 'vpsde':
@@ -55,12 +55,14 @@ def evaluate(config, workdir, eval_folder, speed_up, freq_mask_path, space_mask_
                       config.data.image_size, config.data.image_size)
     sampling_fn = sampling.get_sampling_fn(config, sde, sampling_shape, inverse_scaler, sampling_eps,
                                            freq_mask_path, space_mask_path,alpha)
+    
     ckpt_path = os.path.join(checkpoint_dir, f'{config.sampling.ckpt_name}')
     state = restore_checkpoint(ckpt_path, state, device=config.device)
     ema.copy_to(score_model.parameters())
 
     logging.info('start sampling!')
     num_sampling_rounds = config.eval.num_samples // config.eval.batch_size + 1
+    logging.info('num_sampling_rounds: {}'.format(num_sampling_rounds))
 
     for r in range(num_sampling_rounds):
         start = time.time()

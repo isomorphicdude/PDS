@@ -4,6 +4,7 @@ import numpy as np
 import abc
 import sde_lib
 from models import utils as mutils
+import logging
 
 _CORRECTORS = {}
 _PREDICTORS = {}
@@ -402,6 +403,7 @@ def get_pc_sampler(sde, shape, predictor, corrector, inverse_scaler, snr,
             timesteps = torch.linspace(sde.T, eps, sde.N, device=device)
 
             for i in range(sde.N):
+                logging.info("sampling -- step: %d" % (i))
                 t = timesteps[i]
                 vec_t = torch.ones(shape[0], device=t.device) * t
 
