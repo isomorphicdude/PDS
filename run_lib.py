@@ -175,7 +175,7 @@ def evaluate_fid(config, workdir, eval_folder,
         # find the last round
         last_round = int(sorted(dir_to_check)[-1].split('/')[-1].split('.')[0].split('_')[-1])
         new_round = last_round + 1    
-        logging.info(f'Found existing samples in {dir_to_check}, continue sampling from round {new_round}'
+        logging.info(f'Found existing samples in {this_sample_dir}, continue sampling from round {new_round}'
                      )
     else:
         new_round = 0
