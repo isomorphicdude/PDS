@@ -7,6 +7,7 @@ import sys
 
 
 config_flags.DEFINE_config_file("config", None, "Training configuration.", lock_config=True)
+flags.DEFINE_bool("compute_fid", False, "Whether to compute FID.")
 flags.DEFINE_string("workdir", None, "Work directory.")
 flags.DEFINE_string("eval_folder", "eval", "The folder name for storing evaluation results.")
 flags.DEFINE_float("speed_up",1,"The times of speedup.")
@@ -21,15 +22,26 @@ FLAGS = flags.FLAGS
 FLAGS(sys.argv)
 
 def main(args):
-    run_lib.evaluate(FLAGS.config,
+    if not FLAGS.compute_fid:
+        run_lib.evaluate(FLAGS.config,
                      FLAGS.workdir,
                      FLAGS.eval_folder,
                      FLAGS.speed_up,
                      FLAGS.freq_mask_path,
                      FLAGS.space_mask_path,
                      FLAGS.alpha,
-                     FLAGS.sde_solver_lr)
-
+                     FLAGS.sde_solver_lr,
+                     FLAGS.verbose)
+    else:
+        run_lib.evaluate_fid(FLAGS.config,
+                        FLAGS.workdir,
+                        FLAGS.eval_folder,
+                        FLAGS.speed_up,
+                        FLAGS.freq_mask_path,
+                        FLAGS.space_mask_path,
+                        FLAGS.alpha,
+                        FLAGS.sde_solver_lr,
+                        FLAGS.verbose)
 
 if __name__ == "__main__":
     app.run(main)
