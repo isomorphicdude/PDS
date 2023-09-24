@@ -2,10 +2,10 @@ import gc
 import io
 import os
 import time
-import numpy as np
 
 import logging
 # Keep the import below for registering the model definitions
+import sde_lib
 from models import ncsnpp
 import losses
 import sampling
@@ -14,14 +14,18 @@ from models.ema import ExponentialMovingAverage
 import datasets
 import evaluation
 
-import sde_lib
+
+import numpy as np
 from absl import flags
 
+import torch
 from torchvision.utils import save_image
 from utils import restore_checkpoint
 
 import tensorflow as tf
 import tensorflow_gan as tfgan
+
+
 
 FLAGS = flags.FLAGS
 
@@ -236,6 +240,8 @@ def evaluate_fid(config, workdir, eval_folder,
                 io_buffer, pool_3=latents["pool_3"], logits=latents["logits"]
             )
             fout.write(io_buffer.getvalue())
+            
+        torch.cuda.empty_cache()
 
     # Computing FID
     all_logits = []
