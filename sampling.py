@@ -66,7 +66,11 @@ def get_corrector(name):
     return _CORRECTORS[name]
 
 
-def get_sampling_fn(config, sde, shape, inverse_scaler, eps, freq_mask_path, space_mask_path, alpha):
+def get_sampling_fn(config, sde, shape, 
+                    inverse_scaler, eps, 
+                    freq_mask_path, space_mask_path, 
+                    alpha,
+                    sde_solver_lr=1.2720):
     """Create a sampling function.
 
   Args:
@@ -82,6 +86,7 @@ def get_sampling_fn(config, sde, shape, inverse_scaler, eps, freq_mask_path, spa
   """
 
     if space_mask_path is not None:
+        # load the mask
         space_mask = np.load(space_mask_path).reshape(
             [1, config.data.num_channels, config.data.image_size, config.data.image_size])
         space_mask /= space_mask.max()
@@ -100,7 +105,7 @@ def get_sampling_fn(config, sde, shape, inverse_scaler, eps, freq_mask_path, spa
         freq_mask = torch.from_numpy(freq_mask).cuda()
         freq_mask = freq_mask.pow(-1)
     else:
-        freq_mask = 1
+        freq_mask = 1 * sde_solver_lr
 
     predictor = get_predictor(config.sampling.predictor.lower())
     corrector = get_corrector(config.sampling.corrector.lower())
