@@ -2,3 +2,10 @@ ml-collections
 absl-py
 torch
 torchvision
+tensorflow-gan
+tensorflow_io
+tensorflow_datasets
+tensorflow
+tensorflow-addons
+tensorboard
+ninja
