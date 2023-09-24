@@ -14,6 +14,7 @@ flags.DEFINE_float("alpha",5,"The parameter alpha.")
 flags.DEFINE_string("freq_mask_path",None,"The path of the frequency mask.")
 flags.DEFINE_string("space_mask_path",None,"The path of the spatial mask.")
 flags.DEFINE_float("sde_solver_lr",1.2720,"The learning rate of the sde solver.")
+flags.DEFINE_bool("verbose",False,"Whether to print the details of the evaluation.")
 flags.mark_flags_as_required(["workdir", "config"])
 
 FLAGS = flags.FLAGS

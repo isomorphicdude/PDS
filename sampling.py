@@ -70,7 +70,8 @@ def get_sampling_fn(config, sde, shape,
                     inverse_scaler, eps, 
                     freq_mask_path, space_mask_path, 
                     alpha,
-                    sde_solver_lr=1.2720):
+                    sde_solver_lr=1.2720,
+                    verbose=False):
     """Create a sampling function.
 
   Args:
@@ -122,7 +123,8 @@ def get_sampling_fn(config, sde, shape,
                                  eps=eps,
                                  device=config.device,
                                  space_mask=space_mask,
-                                 freq_mask=freq_mask)
+                                 freq_mask=freq_mask,
+                                 verbose=verbose)
     return sampling_fn
 
 
@@ -370,7 +372,9 @@ def shared_corrector_update_fn(x, t, sde, model, corrector, continuous, snr, n_s
 
 def get_pc_sampler(sde, shape, predictor, corrector, inverse_scaler, snr,
                    n_steps=1, probability_flow=False, continuous=False,
-                   denoise=True, eps=1e-3, device='cuda', space_mask=None, freq_mask=None):
+                   denoise=True, eps=1e-3, device='cuda', 
+                   space_mask=None, freq_mask=None,
+                   verbose=False):
     # Create predictor & corrector update functions
     predictor_update_fn = functools.partial(shared_predictor_update_fn,
                                             sde=sde,
@@ -408,7 +412,8 @@ def get_pc_sampler(sde, shape, predictor, corrector, inverse_scaler, snr,
             timesteps = torch.linspace(sde.T, eps, sde.N, device=device)
 
             for i in range(sde.N):
-                logging.info("sampling -- step: %d" % (i))
+                if verbose:
+                    logging.info("sampling -- step: %d" % (i))
                 t = timesteps[i]
                 vec_t = torch.ones(shape[0], device=t.device) * t
 

@@ -20,7 +20,8 @@ FLAGS = flags.FLAGS
 
 def evaluate(config, workdir, eval_folder, 
              speed_up, freq_mask_path, space_mask_path, 
-             alpha, sde_solver_lr=1.2720):
+             alpha, sde_solver_lr=1.2720, 
+             verbose=False):
     
     sample_dir = os.path.join(workdir, eval_folder)
     os.makedirs(sample_dir, exist_ok=True)
@@ -58,7 +59,8 @@ def evaluate(config, workdir, eval_folder,
                       config.data.image_size, config.data.image_size)
     sampling_fn = sampling.get_sampling_fn(config, sde, sampling_shape, inverse_scaler, sampling_eps,
                                            freq_mask_path, space_mask_path,alpha, 
-                                           sde_solver_lr=sde_solver_lr)
+                                           sde_solver_lr=sde_solver_lr,
+                                           verbose=verbose)
     
     ckpt_path = os.path.join(checkpoint_dir, f'{config.sampling.ckpt_name}')
     state = restore_checkpoint(ckpt_path, state, device=config.device)
