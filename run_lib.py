@@ -32,6 +32,7 @@ def evaluate(config, workdir, eval_folder, speed_up, freq_mask_path, space_mask_
     state = dict(optimizer=optimizer, model=score_model, ema=ema, step=0)
 
     checkpoint_dir = os.path.join(workdir, "checkpoints")
+    print(checkpoint_dir)
 
     # Setup SDEs
     if config.training.sde.lower() == 'vpsde':
