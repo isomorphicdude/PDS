@@ -1,0 +1,4 @@
+output.txt
+.DS_Store
+__pycache__/run_lib.cpython-310.pyc
+__pycache__/sde_lib.cpython-310.pyc
