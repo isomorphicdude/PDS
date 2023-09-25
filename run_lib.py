@@ -32,7 +32,7 @@ FLAGS = flags.FLAGS
 
 def evaluate(config, workdir, eval_folder, 
              speed_up, freq_mask_path, space_mask_path, 
-             alpha, sde_solver_lr=1.2720, 
+             alpha, sde_solver_lr=1.0829, 
              verbose=False):
     
     sample_dir = os.path.join(workdir, eval_folder)
@@ -108,7 +108,7 @@ def evaluate(config, workdir, eval_folder,
         
 def evaluate_fid(config, workdir, eval_folder, 
              speed_up, freq_mask_path, space_mask_path, 
-             alpha, sde_solver_lr=1.2720, 
+             alpha, sde_solver_lr=1.0829, 
              verbose=False,
              ):
     

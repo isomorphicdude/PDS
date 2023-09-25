@@ -70,7 +70,7 @@ def get_sampling_fn(config, sde, shape,
                     inverse_scaler, eps, 
                     freq_mask_path, space_mask_path, 
                     alpha,
-                    sde_solver_lr=1.2720,
+                    sde_solver_lr=1.0829,
                     verbose=False):
     """Create a sampling function.
 
