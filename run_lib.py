@@ -178,7 +178,8 @@ def evaluate_fid(config, workdir, eval_folder,
     dir_to_check = tf.io.gfile.glob(os.path.join(this_sample_dir, "statistics_*.npz"))
     if len(dir_to_check) > 0:
         # find the last round
-        last_round = int(sorted(dir_to_check)[-1].split('/')[-1].split('.')[0].split('_')[-1])
+        dir_list = [int(x.split('/')[-1].split('.')[0].split('_')[-1]) for x in dir_to_check]
+        last_round = max(dir_list)
         new_round = last_round + 1    
         logging.info(f'Found existing samples in {this_sample_dir}, continue sampling from round {new_round}'
                      )
