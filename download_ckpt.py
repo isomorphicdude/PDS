@@ -2,12 +2,14 @@ import os
 import gdown
 import tensorflow as tf
 from absl import flags
+import sys
 
 # !mkdir checkpoints
 # !mkdir masks
 
 flags.DEFINE_string("workdir", None, "Work directory.")
 FLAGS = flags.FLAGS
+FLAGS(sys.argv)
 
 tf.io.gfile.makedirs(os.path.join(FLAGS.workdir, 'checkpoints'))
 tf.io.gfile.makedirs(os.path.join(FLAGS.workdir, 'masks'))
