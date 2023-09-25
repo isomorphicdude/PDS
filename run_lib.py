@@ -159,6 +159,7 @@ def evaluate_fid(config, workdir, eval_folder,
                                            verbose=verbose)
     
     ckpt_path = os.path.join(checkpoint_dir, f'{config.sampling.ckpt_name}')
+    logging.info(f'ckpt_path: {ckpt_path}')
     state = restore_checkpoint(ckpt_path, state, device=config.device)
     ema.copy_to(score_model.parameters())
 
